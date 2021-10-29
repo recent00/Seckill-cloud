@@ -137,3 +137,9 @@ key_user_id_product_id：是唯一索引，防止用户重复抢购商品。
 
 
 
+### 秒杀核心思路
+
+![秒杀核心思路](D:\lys\java\project\Seckill-cloud\秒杀核心思路.png)
+
+
+
