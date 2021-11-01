@@ -1,6 +1,9 @@
 package com.scut.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.scut.common.RespBean;
+import com.scut.common.RespBeanEnum;
 import com.scut.entity.Product;
 import com.scut.exception.ServiceException;
 import com.scut.service.ProductService;
@@ -96,12 +99,13 @@ public class SecKillController implements InitializingBean {
      * redis+rabbitmq
      * 秒杀商品数1000
      * 并发量1000，循环10次
-     * 吞吐量：1201.2/sec
+     * 吞吐量：1201.2/sec      使用sentinal限流：预热方式：预热时长1s，单机阈值400，吞吐量1933.9/sec
      * @param buyInformation
      * @return
      * @throws Exception
      */
     @GetMapping("/5")
+    @SentinelResource(value = "test5")
     public RespBean test5(BuyInformation buyInformation) throws Exception {
         log.info("测试5 --- userId: {} ----- priductId: {}",buyInformation.getUserId(),buyInformation.getProductId());
         return secKillService.handleByRedisAndRabbitMQ(buyInformation.getUserId(),buyInformation.getProductId(),false);

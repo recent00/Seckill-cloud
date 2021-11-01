@@ -23,6 +23,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -40,7 +41,7 @@ public class SecKillServiceImpl implements SecKillService {
     @Autowired
     MQSender mqSender;
 
-    private Map<Integer, Boolean> EmptyStockMap = new HashMap<>();
+    private ConcurrentHashMap<Integer, Boolean> EmptyStockMap = new ConcurrentHashMap<>();
 
 
     @Override

@@ -140,5 +140,23 @@ key_user_id_product_id：是唯一索引，防止用户重复抢购商品。
 
 ![秒杀核心思路](D:\lys\java\project\Seckill-cloud\秒杀核心思路.png)
 
+### 技术要点
+
+- #### **缓存查询**
+
+  预加载商品库存到Redis缓存，提高查询速率。
+
+  使用ConcurrentHashMap进行内存标记，减少Redis的访问，提高查询效率
 
 
+- #### 异步下单
+
+  Redis减库存后，通过Rabbitmq进行异步下单，更新数据库；
+
+  通过订单微服务监听消息队列，进行订单生成与更新数据库。
+
+- #### 限流
+
+  利用spring cloud Alibaba Sentinal进行流量控制，进行接口防刷，减小服务器压力：
+
+  ![sentinal流控](D:\lys\java\project\Seckill-cloud\sentinal流控.png)

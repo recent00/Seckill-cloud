@@ -49,4 +49,5 @@ public interface SecKillService {
      * @return
      */
     void SendMessage(Integer userId, Integer productId);
+
 }

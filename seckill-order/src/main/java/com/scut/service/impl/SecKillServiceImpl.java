@@ -89,6 +89,7 @@ public class SecKillServiceImpl implements SecKillService {
                     return;
                 }
                 else {
+                    redisTemplate.opsForValue().increment("seckillProduct:" + productId);
                     log.info("乐观加锁失败或库存不足，秒杀失败..userId: " + userId);
                     return;
                 }

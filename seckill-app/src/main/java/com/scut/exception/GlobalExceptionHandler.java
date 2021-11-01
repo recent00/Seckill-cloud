@@ -1,5 +1,6 @@
 package com.scut.exception;
 
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.scut.common.RespBean;
 import com.scut.common.RespBeanEnum;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,8 @@ public class GlobalExceptionHandler {
             return RespBean.error(RespBeanEnum.ERROR,e.getMessage());
         }else if(e instanceof ServiceException) {
             return RespBean.error(RespBeanEnum.ERROR,e.getMessage());
+        }else if(e instanceof BlockException) {
+            return RespBean.error(RespBeanEnum.ACCESS_LIMIT_REAHCED);
         }
         return RespBean.error(RespBeanEnum.ERROR);
     }
