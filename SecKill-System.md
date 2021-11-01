@@ -10,7 +10,6 @@
 - 消息队列：**RabbitMq**
 - 数据库：**MySQl**
 - 熔断与限流：**Sentinel**
-- 分布式事务：**Seata**
 
 
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scut.mapper.RecordMapper">
+
+    <resultMap id="RecordMapper" type="com.scut.entity.Record">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="product_id" property="productId"/>
+        <result column="state" property="state"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="getRecordById" resultMap="RecordMapper">
+        select * from tb_record where id=#{id}
+    </select>
+
+    <select id="getRecordByUserIdAndProductId" resultMap="RecordMapper">
+        select * from tb_record where user_id=#{userId} and product_id=#{productId}
+    </select>
+
+    <insert id="addRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_record(id,user_id,product_id,state,create_time) values(#{id},#{userId},#{productId},#{state},#{createTime})
+    </insert>
+</mapper>

@@ -2,12 +2,11 @@ package com.scut.consumer;
 
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONUtil;
-import com.scut.entity.ParseData;
-import com.scut.entity.canalTbl;
+import com.scut.entity.Product;
+import com.scut.vo.ParseData;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -25,16 +24,18 @@ public class Comsumer {
         String msg = new String(message.getBody());
         System.out.println("收到信息：" + msg);
         //序列化成javabean
-        ParseData<canalTbl> data = JSONUtil.toBean(msg, new TypeReference<ParseData<canalTbl>>() {
+        ParseData<Product> data = JSONUtil.toBean(msg, new TypeReference<ParseData<Product>>() {
         }, true);
 
-        List<canalTbl> list = data.getData();
-
-        HashOperations hops = redisTemplate.opsForHash();
-        if("DELETE".equals(data.getType())){//删除
-            hops.delete("hot:key",list.get(0).getId()+"");
-        }else{//增改
-            hops.put("hot:key",list.get(0).getId()+"",list.get(0)+"");
+        List<Product> list = data.getData();
+        if("seckill".equals(data.getDatabase()) && "tb_product".equals(data.getTable())) {
+            ValueOperations ops = redisTemplate.opsForValue();
+            Product product = list.get(0);
+            int productId = product.getId();
+            int stock = product.getStock();
+            if("UPDATE".equals(data.getType())){
+                ops.set("seckillProduct:" + productId,stock);
+            }
         }
     }
 }

@@ -179,36 +179,4 @@ public class SecKillServiceImpl implements SecKillService {
         BuyInformation buyInformation = new BuyInformation(userId,productId);
         mqSender.sendSeckillMessage(JSONUtil.toJsonStr(buyInformation));
     }
-
-    /**
-     * 接收消息队列中的消息并更新
-     * @param userId
-     * @param productId
-     * @param optimisticLock
-     * @throws ServiceException
-     */
-    @Override
-    public void ReceiveAndUpdate(Integer userId, Integer productId, boolean optimisticLock) throws ServiceException {
-        try{
-            Integer stock = productMapper.getStockById(productId);
-            if(stock > 0){
-                boolean update = updateAndInsertRecord(userId,productId,optimisticLock);
-                if(update) {
-                    log.info("商品id：{} ,用户id：{} 秒杀成功,数据库库存更新：{}", productId, userId, stock);
-                    redisTemplate.opsForValue().set("order:" + userId + ":" + productId,new Record(null,userId,productId,1,null));
-                    return;
-                }
-                else {
-                    log.info("乐观加锁失败或库存不足，秒杀失败..userId: " + userId);
-                    return;
-                }
-            }else {
-                redisTemplate.opsForValue().set("isStockEmpty:" + productId,"0");
-                log.info("乐观加锁失败或库存不足，秒杀失败..userId: " + userId);
-                return;
-            }
-        }catch (DAOException e) {
-            return;
-        }
-    }
 }

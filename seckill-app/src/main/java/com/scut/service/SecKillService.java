@@ -49,14 +49,4 @@ public interface SecKillService {
      * @return
      */
     void SendMessage(Integer userId, Integer productId);
-
-    /**
-     * 接收消息队列中的消息并更新
-     * @param userId
-     * @param productId
-     * @param optimisticLock
-     * @return
-     * @throws ServiceException
-     */
-    void ReceiveAndUpdate(Integer userId, Integer productId,boolean optimisticLock) throws ServiceException;
 }

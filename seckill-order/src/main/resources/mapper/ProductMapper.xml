@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scut.mapper.ProductMapper">
+
+    <resultMap id="ProductMapper" type="com.scut.entity.Product">
+        <id column="id" property="id"/>
+        <result column="product_name" property="productName"/>
+        <result column="price" property="price"/>
+        <result column="stock" property="stock"/>
+        <result column="version_id" property="versionId"/>
+    </resultMap>
+
+    <select id="getProductById" resultMap="ProductMapper">
+        select * from tb_product where id=#{id}
+    </select>
+
+    <select id="getStockById" resultType="java.lang.Integer">
+      select stock from tb_product where id=#{id}
+    </select>
+
+    <select id="getAllProduct" resultMap="ProductMapper">
+        select * from tb_product
+    </select>
+
+    <insert id="addProduct" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_product(id,product_name,price,stock,version_id) values(#{id},#{productName},#{price},#{stock},#{versionId})
+    </insert>
+
+    <update id="updateProductStock">
+        update tb_product set stock=stock-1 where id=#{id} and stock>0
+    </update>
+
+    <select id="getVersionId" resultType="java.lang.Integer">
+        select version_id from tb_product where id=#{id}
+    </select>
+
+    <update id="updateStockByLock">
+        update tb_product set stock=stock-1,version_id=#{versionId}+1
+        where id=#{id} and version_id=#{versionId} and stock>0
+    </update>
+</mapper>

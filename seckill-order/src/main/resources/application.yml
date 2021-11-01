@@ -1,0 +1,87 @@
+server:
+  port: 6003
+
+spring:
+  application:
+    name: cloud-order-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 #配置Nacos地址
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource            # 当前数据源操作类型
+    driver-class-name: org.gjt.mm.mysql.Driver              # mysql驱动包 com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.16.130:3306/seckill?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    hikari:
+      #连接池名
+      pool-name: DateHikariCP
+      # 最小空闲连接出
+      minimum-idle: 5
+      # 空闲连接存活最大时间，默认600000(10分钟)
+      idle-timeout: 600000
+      #最大连接数，默认10
+      maximum-pool-size: 10
+      # 从连接池返回的连接自动提交
+      auto-commit: true
+      # 连接最大存活时间，0表示永久存活，默认1800000(30分钟)
+      max-lifetime: 1800000
+      # 连接超时时间，默认30000(30秒)
+      connection-timeout: 30000
+      # 测试连接是否可用的查询语句
+      connection-test-query: SELECT 1
+  redis:
+    #服务器地址
+    host: 192.168.16.130
+    #端口
+    port: 6379
+    #数据库
+    database: 0
+    #超时时间
+    timeout: 3000ms
+    lettuce:
+      pool:
+        #最大连接数，默认8
+        max-active: 8
+        #最大连接阻塞等待时间，默认-1
+        max-wait: 10000ms
+        #最大空闲连接，默认8
+        max-idle: 200
+        #最小空闲连接，默认0
+        min-idle: 5
+
+    # RabbitMQ
+  rabbitmq:
+    # 服务器
+    host: 192.168.16.130
+    #用户名
+    username: admin
+    #密码
+    password: 123
+    #端口
+    port: 5672
+    listener:
+      simple:
+        #消费者最小数量
+        concurrency: 10
+        #消费者最大数量
+        max-concurrency: 10
+        #限制消费者每次只处理一条消息，处理完再继续下一条消息
+        prefetch: 1
+        #启动时是否默认启动容器，默认true
+        auto-startup: true
+        #被拒绝时重新进入队列
+        default-requeue-rejected: true
+    publisher-confirm-type: correlated
+    publisher-returns: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+  type-aliases-package: com.scut.entity    # 所有Entity别名类所在包
