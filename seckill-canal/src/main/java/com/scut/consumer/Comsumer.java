@@ -19,6 +19,20 @@ public class Comsumer {
     @Autowired
     RedisTemplate redisTemplate;
 
+
+/*    public void start() {
+        new Thread(() -> {
+            while(true) {
+                System.out.println("定时任务启动");
+                try {
+                    Thread.sleep(20000);
+                    needUpdate = true;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }*/
     @RabbitListener(queues = "example2-queue")
     public void receiveConfirmQueue(Message message){
         String msg = new String(message.getBody());

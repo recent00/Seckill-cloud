@@ -12,6 +12,7 @@
       <module>seckill-app</module>
         <module>seckill-canal</module>
       <module>seckill-order</module>
+      <module>seckill-gateway</module>
     </modules>
     <packaging>pom</packaging>
 

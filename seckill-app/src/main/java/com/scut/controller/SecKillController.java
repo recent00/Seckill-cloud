@@ -1,5 +1,4 @@
 package com.scut.controller;
-
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.scut.common.RespBean;
@@ -99,16 +98,45 @@ public class SecKillController implements InitializingBean {
      * redis+rabbitmq
      * 秒杀商品数1000
      * 并发量1000，循环10次
-     * 吞吐量：1201.2/sec      使用sentinal限流：预热方式：预热时长1s，单机阈值400，吞吐量1933.9/sec
+     * 吞吐量：1201.2/sec      使用sentinal限流：预热方式：预热时长1s，单机阈值400
      * @param buyInformation
      * @return
      * @throws Exception
      */
     @GetMapping("/5")
-    @SentinelResource(value = "test5")
-    public RespBean test5(BuyInformation buyInformation) throws Exception {
+    @SentinelResource(value = "test5",blockHandler = "handleException2")
+    public RespBean test5(BuyInformation buyInformation)  {
         log.info("测试5 --- userId: {} ----- priductId: {}",buyInformation.getUserId(),buyInformation.getProductId());
-        return secKillService.handleByRedisAndRabbitMQ(buyInformation.getUserId(),buyInformation.getProductId(),false);
+        try {
+            return secKillService.handleByRedisAndRabbitMQ(buyInformation.getUserId(),buyInformation.getProductId(),false);
+        } catch (ServiceException e) {
+            return RespBean.error(RespBeanEnum.ERROR);
+        }
+    }
+
+    public RespBean handleException2(BuyInformation buyInformation,BlockException exception) {
+        log.info("访问过于频繁，请稍后再试");
+        return RespBean.error(RespBeanEnum.ACCESS_LIMIT_REAHCED);
+    }
+
+    /**
+     * redis+rabbitmq+gateway
+     * 秒杀商品数1000
+     * 并发量1000，循环10次
+     * 使用sentinal限流：预热方式：预热时长1s，单机阈值500
+     * 吞吐量：540.6/sec
+     * @param buyInformation
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/6")
+    public RespBean test6(BuyInformation buyInformation)  {
+        log.info("测试6 --- userId: {} ----- priductId: {}",buyInformation.getUserId(),buyInformation.getProductId());
+        try {
+            return secKillService.handleByRedisAndRabbitMQ(buyInformation.getUserId(),buyInformation.getProductId(),false);
+        } catch (ServiceException e) {
+            return RespBean.error(RespBeanEnum.ERROR);
+        }
     }
 
     @GetMapping("/result")
