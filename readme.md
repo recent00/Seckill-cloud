@@ -138,7 +138,8 @@ key_user_id_product_id：是唯一索引，防止用户重复抢购商品。
 
 ### 秒杀核心思路
 
-![秒杀核心思路](D:\lys\java\project\Seckill-cloud\秒杀核心思路.png)
+![秒杀核心思路](.\秒杀核心思路.png)
+
 
 ### 技术要点
 
@@ -159,4 +160,4 @@ key_user_id_product_id：是唯一索引，防止用户重复抢购商品。
 
   利用spring cloud Alibaba Sentinal进行流量控制，进行接口防刷，减小服务器压力：
 
-  ![sentinal流控](D:\lys\java\project\Seckill-cloud\sentinal流控.png)
+  ![sentinal流控](.\sentinal流控.png)
