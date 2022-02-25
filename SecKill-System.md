@@ -160,3 +160,40 @@ key_user_id_product_id：是唯一索引，防止用户重复抢购商品。
   利用spring cloud Alibaba Sentinal进行流量控制，进行接口防刷，减小服务器压力：
 
   ![sentinal流控](D:\lys\java\project\Seckill-cloud\sentinal流控.png)
+
+
+
+### 项目亮点
+
+1. 使用ConcurrentHashMap进行内存标记+Redis缓存的二级缓存方式减轻数据库访问压力，提高查询效率
+2. 使用RabbitMQ进行异步下单，提高响应速度，提升用户体验
+3. 借助于Spring Cloud Alibaba Sentinel进行限流，该工具具有良好的页面控制功能，便于控制。
+
+
+
+### 项目难点及出现的问题
+
+1. **RabbitMQ消息重复消费怎么办？**
+
+   在数据库中将订单编号与用户id设置为唯一索引，同一个用户的订单不能重新生成，因此防止消息重复。
+
+2. **RabbitMQ怎么确保消息不丢失？**
+
+   生产端发布确认机制，消费端消息应答。
+
+3. **加乐观锁会出现库存遗留问题？**
+
+   加乐观锁更新时需要对比版本号，导致很多请求失败，因此可能出现库存遗留，因此改用悲观锁解决此问题，在读多写多的场景下乐观锁并不适用。
+
+4. **如何解决超卖问题？**
+
+   Redis端：直接上分布式锁
+
+   数据库端：不加锁，在更新语句的时候也判断下库存是否小于零，小于零则秒杀失败，大于零则秒杀成功。
+
+5. **ConcurrentHashMap进行内存标记分布式场景下会出现数据不同步的情况，怎么解决？**
+
+   通过zookeeper进行集群同步：zookeeper创建节点，集群服务监听这个节点，节点数据为库存是否不够，当ConcurrentHashMap内存标记为true时，集群其他服务监听到节点数据变化就更新本地ConcurrentHashMap的数据
+
+
+Redis缓存出现的问题：https://www.yuque.com/u22408961/gnmalc/ako710
