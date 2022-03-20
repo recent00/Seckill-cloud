@@ -99,7 +99,7 @@ public class SecKillServiceImpl implements SecKillService {
                 return;
             }
         }catch (Exception e) {
-            redisTemplate.opsForValue().increment("seckillProduct:" + productId);
+            //redisTemplate.opsForValue().increment("seckillProduct:" + productId);
             return;
         }
     }

@@ -148,6 +148,10 @@ key_user_id_product_id：是唯一索引，防止用户重复抢购商品。
 
   使用ConcurrentHashMap进行内存标记，减少Redis的访问，提高查询效率
 
+  问题：分布式场景下内存标记的同步问题
+
+  **解决：通过zookeeper监听机制，库存为空时设置内存标记的同时，在zookeeper创建节点，表示库存为空，其他服务端监听zookeeper节点变化，更新自己的内存标记。**
+
 
 - #### 异步下单
 
